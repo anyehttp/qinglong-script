@@ -20,16 +20,16 @@ def BeautifulSoup_html(price):
 
 def bark(notice):
 
-    requests.get(f'https://api.day.app/5keujV8LLqpBhDTGMnUSD7/{notice}')
+    requests.get(f'这里放入bark推送url{notice}')
 
 
 
 def main():
-    # 读取环境变量中的app数据，如果没有设置则使用默认值
-    # app_数据 = os.getenv('app_data')
-    app_data = os.getenv('app_data', '{"地区":["cn", "us"], "名字":["pix站助手-精美二次元壁纸采集工具", "code-app"], "id":[1161125462, 1512938504]}')
+    # 读取环境变量中的app数据
+    app_数据 = os.getenv('app_data')
+    #app_data = os.getenv('app_data', '{"地区":["cn", "us"], "名字":["pix站助手-精美二次元壁纸采集工具", "code-app"], "id":[1161125462, 1512938504]}')
     
-    app_数据 = eval(app_data)  # 使用eval解析字符串成字典
+    app_数据 = eval(app_数据)  # 使用eval解析字符串成字典
 
     assert len(app_数据['地区']) == len(app_数据['名字']) == len(app_数据['id'])
     

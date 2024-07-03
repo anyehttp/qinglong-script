@@ -2,6 +2,12 @@ import requests
 import os
 from bs4 import BeautifulSoup
 
+#一个监控AppStore软件本体价格的脚本，青龙创建requests，os，bs4依赖，
+
+#在下面放入bark推送url比如：https://api.day.app/xxxxxxxxx/{notice}
+def bark(notice):
+    requests.get(f'这里放入bark推送url{notice}')
+
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
 }
@@ -16,11 +22,6 @@ def BeautifulSoup_html(price):
     soup = BeautifulSoup(price.text, 'html.parser')
     price = soup.find('li', class_='inline-list__item inline-list__item--bulleted app-header__list__item--price')
     return price
-
-
-def bark(notice):
-
-    requests.get(f'这里放入bark推送url{notice}')
 
 
 
@@ -46,7 +47,7 @@ def main():
         for i in BeautifulSoup_price:
             print(名字, i.text.strip())
             notice_bark = f"{名字} {i.text.strip()}"
-            notice += notice_bark + '\n'
+            notice += notice_bark + '\n' + '-----------' + '\n'
             
     #调用通知函数
     bark(notice)

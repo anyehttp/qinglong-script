@@ -2,11 +2,15 @@ import requests
 import os
 from bs4 import BeautifulSoup
 
-#一个监控AppStore软件本体价格的脚本，青龙创建requests，os，bs4依赖，
+#一个监控AppStore软件本体价格的脚本，青龙创建requests，os，bs4依赖
 
-#在下面放入bark推送url比如：https://api.day.app/xxxxxxxxx/{notice}
+#环境变量设置：
+#设置环境变量-app_data 值为 要监控的app，AppStore链接里面的 地区 名字 和id：{"地区":["cn", "us"], "名字":["pix站助手-精美二次元壁纸采集工具", "code-app"], "id":[1161125462, 1512938504]}
+#bark通知-设置环境变量值为 app_bark 值为：https://api.day.app/xxxxxx/
 def bark(notice):
-    requests.get(f'这里放入bark推送url{notice}')
+    bark_url = os.getenv('app_bark')
+    requests.get(f'{bark_url}{notice}')
+
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',

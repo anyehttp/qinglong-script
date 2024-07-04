@@ -2,10 +2,10 @@ import requests
 import os
 from bs4 import BeautifulSoup
 
-#一个监控AppStore软件本体价格的脚本，青龙创建requests，os，bs4依赖
+#一个监控AppStore软件本体和内购价格的脚本，青龙创建requests，os，bs4依赖
 
 #环境变量设置：
-#设置环境变量app_data 值为 要监控的app，AppStore链接里面的 地区 名字 和id：{"地区":["cn", "us"], "名字":["pix站助手-精美二次元壁纸采集工具", "code-app"], "id":[1161125462, 1512938504]}
+#设置环境变量app_data 值为 要监控的app，AppStore链接里面的 地区 名字 和id：{"地区":["us", "us", "us"], "名字":["code-app", "青龙面板", "surge-5"], "id":[1512938504, 6466607641, 1442620678], "购买方式":["本体", "内购", "内购"]}
 #bark通知-设置环境变量值为 app_bark 值为：https://api.day.app/xxxxxx/
 def bark(notice):
     bark_url = os.getenv('app_bark')
@@ -22,36 +22,55 @@ def request_url(url):
         url_html.encoding = 'utf-8'
         return url_html
 
-def BeautifulSoup_html(price):
+#app本体
+def BeautifulSoup_本体_html(price):
     soup = BeautifulSoup(price.text, 'html.parser')
-    price = soup.find('li', class_='inline-list__item inline-list__item--bulleted app-header__list__item--price')
-    return price
+    price_element = soup.find('li', class_='inline-list__item inline-list__item--bulleted app-header__list__item--price')
+    return price_element
+
+#app内购
+def BeautifulSoup_内购_html(price):
+    soup = BeautifulSoup(price.text, 'html.parser')
+    app_titles = soup.find_all('span', class_='truncate-single-line truncate-single-line--block')
+    app_prices = soup.find_all('span', class_='list-with-numbers__item__price small-hide medium-show-tablecell')
+    return app_titles, app_prices
 
 
 
 def main():
     # 读取环境变量中的app数据
     app_数据 = os.getenv('app_data')
-    #app_data = os.getenv('app_data', '{"地区":["cn", "us"], "名字":["pix站助手-精美二次元壁纸采集工具", "code-app"], "id":[1161125462, 1512938504]}')
+    #app_数据 = os.getenv('app_data', '{"地区":["us", "us", "us"], "名字":["code-app", "青龙面板", "surge-5"], "id":[1512938504, 6466607641, 1442620678], "购买方式":["本体", "内购", "内购"]}')
     
-    app_数据 = eval(app_数据)  # 使用eval解析字符串成字典
+    # 使用eval解析字符串成字典
+    app_数据 = eval(app_数据)  
 
-    assert len(app_数据['地区']) == len(app_数据['名字']) == len(app_数据['id'])
+    #对比数据
+    assert len(app_数据['地区']) == len(app_数据['名字']) == len(app_数据['id']) == len(app_数据['购买方式'])
     
+    #备用空字符
     notice = ''
-
-    for 地区, 名字, id in zip(app_数据['地区'], app_数据['名字'], app_数据['id']):
-
+    
+    #打包成zip遍历
+    for 地区, 名字, id, 购买方式 in zip(app_数据['地区'], app_数据['名字'], app_数据['id'], app_数据['购买方式']):
         url = f'https://apps.apple.com/{地区}/app/{名字}/id{id}'
-
         url_html = request_url(url)
-
-        BeautifulSoup_price = BeautifulSoup_html(url_html)
-
-        for i in BeautifulSoup_price:
-            print(名字, i.text.strip())
-            notice_bark = f"{名字} {i.text.strip()}"
-            notice += notice_bark + '\n' + '-----------' + '\n'
+        
+        
+        #判断是否为本体
+        if 购买方式 == '本体':
+            BeautifulSoup_price = BeautifulSoup_本体_html(url_html)
+            if BeautifulSoup_price:
+                print(名字, 购买方式, BeautifulSoup_price.text.strip())
+                notice_bark = f"{名字}-{购买方式}-{BeautifulSoup_price.text.strip()}"
+                notice += notice_bark + '\n' + '-----------' + '\n'
+        else :
+            app_titles, app_prices = BeautifulSoup_内购_html(url_html)
+            if app_titles and app_prices:
+                for title, price in zip(app_titles, app_prices):
+                    print(名字, 购买方式, title.text.strip(), price.text.strip())
+                    notice_bark = f"{名字}-{购买方式}-{title.text.strip()}-{price.text.strip()}"
+                    notice += notice_bark + '\n' + '-----------' + '\n'
             
     #调用通知函数
     bark(notice)

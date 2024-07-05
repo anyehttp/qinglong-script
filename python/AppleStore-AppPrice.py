@@ -2,6 +2,9 @@ import requests
 import os
 from bs4 import BeautifulSoup
 
+#频道:https://t.me/IPAs_share
+#群组:https://t.me/IPAs_Dd
+
 #一个监控AppStore软件本体和内购价格的脚本，青龙创建requests，os，bs4依赖
 
 #环境变量设置：

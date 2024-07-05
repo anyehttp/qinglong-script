@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 #一个监控AppStore软件本体和内购价格的脚本，青龙创建requests，os，bs4依赖
 
 #环境变量设置：
-#设置环境变量app_data 值为 要监控的app，AppStore链接里面的 地区 名字 和id：{"地区":["us", "us", "us"], "名字":["code-app", "青龙面板", "surge-5"], "id":[1512938504, 6466607641, 1442620678], "购买方式":["本体", "内购", "内购"]}
+#设置环境变量app_data 值为 要监控的app，AppStore链接里面的 地区 名字 和id：{"地区":["us", "us", "us"], "名字":["quantumult-x", "shadowrocket", "surge-5"], "id":[1443988620, 932747118, 1442620678], "购买方式":["本体", "本体", "内购"]}
 #bark通知-设置环境变量名为 app_bark 值为：https://api.day.app/xxxxxx/
 def bark(notice):
     bark_url = os.getenv('app_bark')

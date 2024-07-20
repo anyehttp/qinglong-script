@@ -6,6 +6,14 @@ import aiohttp
 from bs4 import BeautifulSoup
 import urllib.parse
 
+
+#添加 app_data 变量格式为 AppStore链接：https://apps.apple.com/us/app/surge-5/id1442620678?l=zh-Hans-CN 中 
+#此链接中 us 就是国家 surge-5 就是名字 1442620678 是id 软件付费在应用内就是 内购
+#完整数据就是：{"地区":["us"], "名字":["surge-5"], "id":[1442620678], "购买方式":["内购"]}
+#多软件用英文 , 隔开 比如：{"地区":["us", "cn"], "名字":["surge-5", "code-app"], "id":[1442620678, 1512938504], "购买方式":["内购", "本体"]}
+#添加 app_bark 变量 内容为bark链接
+
+
 # 通知函数，使用 Bark 服务发送通知
 async def bark(notice):
     async with aiohttp.ClientSession() as session:

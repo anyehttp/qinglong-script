@@ -4,6 +4,7 @@ import os
 import random
 import requests
 #先在此网站登录https://wyy.ukzs.net/ 然后添加wyyyy_data(Cookie)和bark_url(bark链接如：https://api.day.app/xxxxxxxxx/)
+#多账号用&分开
 
 def get_random_element(arr):
     return random.choice(arr)
